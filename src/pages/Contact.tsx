@@ -69,38 +69,20 @@ const ContactForm = () => {
     setLoading(true);
     setError(false);
 
-    const portalId = '148316604';
-    const formGuid = '1bac21af-8d90-4c4d-9109-63a380a35ef8';
-    const nameParts = form.name.trim().split(' ');
-    const firstName = nameParts[0] || '';
-    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '.';
-
-    const data = {
-      fields: [
-        { name: 'email', value: form.email },
-        { name: 'firstname', value: firstName },
-        { name: 'lastname', value: lastName },
-        { name: 'company', value: form.company },
-        { name: 'message', value: form.message },
-        { name: 'target_marketgeography', value: form.market },
-        { name: 'sector', value: form.sector }
-      ],
-      context: {
-        pageUri: window.location.href,
-        pageName: 'Blue Gorilla Contact Form'
-      }
-    };
-
     try {
-      const response = await fetch(
-        `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formGuid}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        }
-      );
-      
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          company: form.company,
+          email: form.email,
+          market: form.market,
+          sector: form.sector,
+          message: form.message,
+        }),
+      });
+
       if (response.ok) {
         setSent(true);
       } else {
